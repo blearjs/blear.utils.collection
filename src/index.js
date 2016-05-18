@@ -2,7 +2,7 @@
 
 
 var object = require('blear.utils.object');
-var array = require('.blear.utils.collection');
+var array = require('blear.utils.array');
 var typeis = require('blear.utils.typeis');
 
 

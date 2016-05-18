@@ -7,80 +7,79 @@
 
 'use strict';
 
-var array = require('../src/index.js');
+var collection = require('../src/index.js');
 
 describe('index.js', function () {
-    it('.like/.from', function () {
-        var obj1 = {
-            0: '',
-            1: '',
-            length: 2
-        };
-        expect(array.like([])).toEqual(true);
-        expect(array.from([])).toEqual([]);
-        expect(array.like(obj1)).toEqual(true);
-        expect(array.from(obj1)).toEqual(['', '']);
-        (function () {
-            expect(array.like(arguments)).toEqual(true);
-            expect(array.from(arguments)).toEqual([]);
-        }());
-        expect(array.like(window)).toEqual(true);
-        expect(array.like(function () {
-        })).toEqual(true);
-        expect(array.like()).toEqual(false);
-        expect(array.from()).toEqual([]);
-    });
-
     it('.each', function () {
-        var arr1 = ['a', 'b', 'c'];
-        var ret1 = 0;
-        var ret2 = '';
-
-        array.each(arr1, function (index, item) {
-            if (index === 2) {
-                return false;
-            }
-
-            ret1 += index;
-            ret2 += item;
+        var obj1 = {a: 1, b: 2};
+        collection.each(obj1, function (key, val) {
+            expect(obj1[key]).toBe(val);
         });
 
-        expect(ret1).toEqual(1);
-        expect(ret2).toEqual('ab');
-        expect(function () {
-            array.each(true, function () {
-                //
-            });
-        }).toThrowError(/NOT/);
+        var arr1 = ['a', 'b'];
+        collection.each(arr1, function (index, val) {
+            expect(arr1[index]).toBe(val);
+        });
+
+        var boo1 = true;
+        var times = 0;
+        collection.each(boo1, function () {
+            times++;
+        });
+        expect(times).toEqual(0);
     });
 
     it('.map', function () {
-        var arr1 = [1, 2, 3];
-        var arr2 = array.map(arr1, function (item) {
-            return item * item;
+        var obj1 = {a: 1, b: 2};
+        var obj2 = collection.map(obj1, function (val) {
+            return val * val * val;
         });
+        expect(obj1).not.toBe(obj2);
+        expect(obj1).toEqual({a: 1, b: 2});
+        expect(obj2).toEqual({a: 1, b: 8});
 
-        expect(arr1).toEqual([1, 2, 3]);
-        expect(arr1).toBe(arr1);
-        expect(arr2).toEqual([1, 4, 9]);
-        expect(arr2).not.toBe(arr1);
+        var arr1 = ['a', 'b'];
+        var arr2 = collection.map(arr1, function (val) {
+            return val + val + val;
+        });
+        expect(arr1).not.toBe(arr2);
+        expect(arr1).toEqual(['a', 'b']);
+        expect(arr2).toEqual(['aaa', 'bbb']);
+
+        var boo1 = true;
+        var times = 0;
+        var boo2 = collection.map(boo1, function () {
+            times++;
+            return '';
+        });
+        expect(times).toEqual(0);
+        expect(boo1).toBe(boo2);
     });
 
     it('.filter', function () {
-        var arr1 = [1, 2, 3];
-        var arr2 = array.filter(arr1, function (item) {
-            return item > 1;
+        var obj1 = {a: 1, b: 2};
+        var obj2 = collection.filter(obj1, function (val) {
+            return val > 1;
         });
+        expect(obj1).not.toBe(obj2);
+        expect(obj1).toEqual({a: 1, b: 2});
+        expect(obj2).toEqual({b: 2});
 
-        expect(arr1).toEqual([1, 2, 3]);
-        expect(arr1).toBe(arr1);
-        expect(arr2).toEqual([2, 3]);
-        expect(arr2).not.toBe(arr1);
-    });
-    it('.remove',function(){
-        var arr1 = [1, 2, 3, 4];
-        var indexes = [0,1,2];
-        var arr2 = array.remove(arr1,indexes);
-        expect(arr2).toEqual([4]);
+        var arr1 = ['a', 'b'];
+        var arr2 = collection.filter(arr1, function (val) {
+            return val.charCodeAt(0) > 97;
+        });
+        expect(arr1).not.toBe(arr2);
+        expect(arr1).toEqual(['a', 'b']);
+        expect(arr2).toEqual(['b']);
+
+        var boo1 = true;
+        var times = 0;
+        var boo2 = collection.filter(boo1, function () {
+            times++;
+            return '';
+        });
+        expect(times).toEqual(0);
+        expect(boo1).toBe(boo2);
     });
 });
