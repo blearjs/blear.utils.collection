@@ -15,7 +15,7 @@ var makeAccess = function (method) {
     return function (obj, callback) {
         if (array.like(obj)) {
             return array[method](obj, callback);
-        } else if (typeis.Object(obj)) {
+        } else if (typeof obj === 'object') {
             return object[method](obj, callback);
         }
 
